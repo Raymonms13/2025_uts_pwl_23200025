@@ -1,21 +1,25 @@
+
 import prisma from "@/lib/prisma";
 
-export async function GET() {
-    const data = await prisma.preorder.findMany({
-        orderBy: { id: 'asc' },
-    });
+export async function GET(req) {
+  try {
+    console.log("Preorder GET API hit!")
 
-    // format tampilan hasil di Postman
-    const formattedData = data.map((item) => ({
-        id: item.id,
-        order_date: item.order_date.toISOString().split('T')[0],
-        order_by: item.order_by,
-        selected_package: item.selected_package,
-        qty: item.qty,
-        status: item.is_paid ? "Lunas" : "Belum Lunas",
-      }));
+    const preorders = await prisma.preorder.findMany()
+    console.log("Data preorder:", preorders)
 
-    return new Response(JSON.stringify(formattedData), { status: 200 });
+    return new Response(JSON.stringify(preorders), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  } catch (error) {
+    console.error("API error:", error)
+
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
 }
 
 export async function POST(request) {
