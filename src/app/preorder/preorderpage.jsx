@@ -24,6 +24,45 @@ export default function PreorderPage() {
         fetchPreorders();
     }, []);
 
+//     const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   const method = editId ? 'PUT' : 'POST';
+//   const url = editId ? `/api/preorder/${editId}` : '/api/preorder';
+
+//   const payload = {
+//     order_by,
+//     selected_package,
+//     qty: Number(qty),
+//     status,
+//   };
+
+//   // Hanya tambahkan order_date saat POST
+//   if (!editId) {
+//     payload.order_date = order_date;
+//   }
+
+//   const res = await fetch(url, {
+//     method,
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify(payload),
+//   });
+
+//   if (res.ok) {
+//     setMsg('Berhasil disimpan');
+//     setOrderDate('');
+//     setOrderBy('');
+//     setSelectedPackage('');
+//     setQty('');
+//     setStatus('');
+//     setEditId(null);
+//     setFormVisible(false);
+//     fetchPreorders();
+//   } else {
+//     setMsg('Gagal menyimpan data');
+//   }
+// };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const method = editId ? 'PUT' : 'POST';
@@ -50,7 +89,7 @@ export default function PreorderPage() {
     };
 
     const handleEdit = (item) => {
-        setOrderDate(item.order_date);
+        setOrderDate(item.order_date ? new Date(item.order_date).toISOString().split('T')[0] : '');
         setOrderBy(item.order_by);
         setSelectedPackage(item.selected_package);
         setQty(item.qty);
@@ -174,7 +213,7 @@ export default function PreorderPage() {
                     {preorders.map((item, index) => (
                         <tr key={item.id}>
                             <td>{index + 1}</td>
-                            <td>{item.order_date}</td>
+                            <td>{new Date (item.order_date).toLocaleDateString('en-GB')}</td>
                             <td>{item.order_by}</td>
                             <td>{item.selected_package}</td>
                             <td>{item.qty}</td>
